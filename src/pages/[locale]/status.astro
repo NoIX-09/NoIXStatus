@@ -1,0 +1,209 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import { site } from '../../site.config';
+import { t, LOCALES, type Locale } from '../../i18n/translations';
+
+export function getStaticPaths() {
+  return LOCALES.map(l => ({ params: { locale: l } }));
+}
+
+const locale = (Astro.currentLocale || 'zh-CN') as Locale;
+---
+
+<Layout title={`Status · ${site.name}`} siteName={site.name}>
+  <link rel="stylesheet" href="/service-card.css" />
+  <div class="page">
+    <h1 class="page-title">{t('statusPage.title', locale)}</h1>
+    <hr class="pencil-line wide" />
+
+    <section class="section">
+      <h2 class="section-title"><Icon name="ph:hard-drives-duotone" size="20" /> <span>{t('statusPage.server', locale)}</span></h2>
+      <div class="card-grid col3">
+        <div class="s-card metric">
+          <div class="s-label">{t('server.cpu', locale)}</div>
+          <div class="s-bar"><div class="s-fill" id="st-cpu-bar"></div></div>
+          <div class="s-val" id="st-cpu-val">...</div>
+        </div>
+        <div class="s-card metric">
+          <div class="s-label">{t('statusPage.memory', locale)}</div>
+          <div class="s-bar"><div class="s-fill" id="st-mem-bar"></div></div>
+          <div class="s-val" id="st-mem-val">...</div>
+        </div>
+        <div class="s-card metric">
+          <div class="s-label">{t('statusPage.disk', locale)}</div>
+          <div class="s-bar"><div class="s-fill" id="st-disk-bar"></div></div>
+          <div class="s-val" id="st-disk-val">...</div>
+        </div>
+        <div class="s-card metric">
+          <div class="s-label">{t('statusPage.uptime', locale)}</div>
+          <div class="s-val big" id="st-uptime-val">...</div>
+        </div>
+        <div class="s-card metric">
+          <div class="s-label">{t('statusPage.load', locale)}</div>
+          <div class="s-val big" id="st-load-val">...</div>
+        </div>
+        <div class="s-card metric">
+          <div class="s-label">{t('statusPage.network', locale)}</div>
+          <div class="s-val big" id="st-net-val">...</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="pencil-line wide" />
+    <section class="section">
+      <h2 class="section-title"><Icon name="ph:cube-duotone" size="20" /> <span>{t('statusPage.docker', locale)}</span></h2>
+      <div class="st-card-grid st-col2" id="st-docker-list"></div>
+    </section>
+
+    <hr class="pencil-line wide" />
+    <section class="section">
+      <h2 class="section-title"><Icon name="ph:plugs-duotone" size="20" /> <span>{t('statusPage.api', locale)}</span></h2>
+      <div class="st-card-grid st-col2" id="st-api-list"><div class="st-empty" id="st-api-empty" style="display:none">{t('statusPage.noServices', locale)}</div></div>
+    </section>
+  </div>
+  <div id="st-i18n" data-stopped={t('statusPage.stopped', locale)} data-no-containers={t('statusPage.noContainers', locale)} data-no-services={t('statusPage.noServices', locale)} data-api-unavailable={t('statusPage.apiUnavailable', locale)} data-unavailable={t('statusPage.unavailable', locale)} hidden></div>
+</Layout>
+
+<style>
+  .page {
+    flex: 1;
+    width: 100%;
+    max-width: 880px;
+    padding: 40px 24px 0;
+    box-sizing: border-box;
+  }
+  .page-title {
+    font-family: 'LXGW WenKai', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #4a3728;
+    margin: 0 0 32px;
+  }
+  .section { margin-bottom: 36px; }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'LXGW WenKai', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #4a3728;
+    margin: 0 0 14px;
+  }
+  .section-title :global(svg) { color: #8b5e3c; }
+  .card-grid { display: grid; gap: 12px; }
+  .col3 { grid-template-columns: repeat(3, 1fr); }
+
+  /* Metric cards */
+  .s-card {
+    border-radius: 10px;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 16px;
+  }
+  .s-label { font-size: 12px; color: #8b7355; margin-bottom: 8px; }
+  .s-bar { height: 6px; border-radius: 3px; background: rgba(139,94,60,.08); overflow: hidden; margin-bottom: 6px; }
+  .s-fill { height: 100%; border-radius: 3px; background: #8b5e3c; transition: width .6s; width: 0; }
+  .s-val { font-family: 'LXGW WenKai Mono', monospace; font-size: 13px; color: #4a3728; }
+  .s-val.big { font-size: 20px; }
+
+  body.dark .page-title { color: #f0e0d0; }
+  body.dark .section-title { color: #f0e0d0; }
+  body.dark .s-card { background: rgba(80,60,48,.6); }
+  body.dark .s-label { color: #b8a088; }
+  body.dark .s-val { color: #e8d5c4; }
+  body.dark .s-bar { background: rgba(200,160,120,.1); }
+
+  @media (max-width: 900px) {
+    .col3 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .page { padding: 32px 16px 0; }
+    .page-title { font-size: 22px; margin: 0 0 20px; }
+    .col3 { grid-template-columns: 1fr; }
+    .section-title { font-size: 15px; }
+  }
+</style>
+
+<script>
+(function() {
+  var $ = function(id) { return document.getElementById(id); };
+  var i18n = $('st-i18n').dataset;
+
+  var CACHE_KEY = 'st_cache';
+  var CACHE_AGE = 30 * 60 * 1000;
+
+  function update(data) {
+    $('st-cpu-bar').style.width = data.cpu + '%';
+    $('st-cpu-val').textContent = data.cpu + '%';
+    var mem = data.memory;
+    var memPct = Math.round(mem.used / mem.total * 100);
+    $('st-mem-bar').style.width = memPct + '%';
+    $('st-mem-val').textContent = mem.used + ' / ' + mem.total + ' ' + mem.unit;
+    var disk = data.disk;
+    var diskPct = disk.total ? Math.round(disk.used / disk.total * 100) : 0;
+    $('st-disk-bar').style.width = diskPct + '%';
+    $('st-disk-val').textContent = disk.used + ' / ' + disk.total + ' ' + disk.unit;
+    $('st-uptime-val').textContent = data.uptime;
+    $('st-load-val').textContent = data.load;
+    var net = data.network;
+    $('st-net-val').textContent = '↓ ' + net.rx + ' ↑ ' + net.tx;
+
+    function buildCards(items, mapper) {
+      if (!items.length) return '<div class="st-empty">' + mapper.empty + '</div>';
+      return items.map(function(it) {
+        var cls = mapper.cls(it);
+        return '<div class="st-card ' + cls + '">' +
+          '<div class="st-dot"></div>' +
+          '<div><div class="st-name">' + mapper.name(it) + '</div><div class="st-sub">' + mapper.sub(it) + '</div></div>' +
+          '</div>';
+      }).join('');
+    }
+
+    $('st-docker-list').innerHTML = buildCards(data.docker || [], {
+      empty: i18n.noContainers,
+      cls: function(c) { return c.running ? 'st-up' : 'st-down'; },
+      name: function(c) { return c.name; },
+      sub: function(c) { return c.running ? (c.image + ' · uptime ' + c.uptime) : (c.image + ' · ' + i18n.stopped); }
+    });
+
+    // External service checks (CHECK_URLS) — rendered only when configured
+    var apiList = $('st-api-list');
+    var apis = data.api_services || [];
+    if (apis.length) {
+      apiList.innerHTML = buildCards(apis, {
+        empty: i18n.noServices,
+        cls: function(a) { return a.ok ? (a.latency > 200 ? 'st-warn' : 'st-up') : 'st-error'; },
+        name: function(a) { return a.name; },
+        sub: function(a) { return a.url + ' · ' + (a.ok ? ('200 OK · ' + a.latency + 'ms') : i18n.unavailable); }
+      });
+    }
+
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
+  }
+
+  (function showCached() {
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (raw) { var c = JSON.parse(raw); if (Date.now() - c.ts < CACHE_AGE) update(c.data); }
+    } catch(e) {}
+  })();
+
+  fetch('/api/status')
+    .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
+    .then(update)
+    .catch(function() {
+      var vals = document.querySelectorAll('.s-val');
+      for (var i = 0; i < vals.length; i++) vals[i].textContent = '--';
+    });
+
+  setInterval(function() {
+    fetch('/api/status')
+      .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
+      .then(update)
+      .catch(function() {});
+  }, 30 * 60 * 1000);
+})();
+</script>

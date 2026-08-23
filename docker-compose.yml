@@ -1,0 +1,28 @@
+services:
+  site:
+    build: .
+    container_name: noix-status-site
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - noix
+
+  status-api:
+    build: ./server
+    container_name: noix-status-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc:ro
+    networks:
+      - noix
+    environment:
+      - CHECK_URLS=${CHECK_URLS:-}
+
+networks:
+  noix:
+    external: true
+    name: nginx-proxy

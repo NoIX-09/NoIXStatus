@@ -1,0 +1,41 @@
+/* ── Card grid ── */
+.st-card-grid { display: grid; gap: 12px; }
+.st-col2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 600px) { .st-col2 { grid-template-columns: 1fr; } }
+
+/* ── Service card ── */
+.st-card {
+  display: flex; align-items: center; gap: 12px; padding: 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+body.dark .st-card { background: rgba(80,60,48,.6); }
+
+/* ── Dot ── */
+.st-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.st-up .st-dot    { background: #4caf50; box-shadow: 0 0 6px rgba(76,175,80,.4); }
+.st-down .st-dot  { background: #bdbdbd; }
+.st-warn .st-dot  { background: #ff9800; box-shadow: 0 0 6px rgba(255,152,0,.3); }
+.st-error .st-dot { background: #f44336; box-shadow: 0 0 6px rgba(244,67,54,.4); }
+body.dark .st-dot { border: 1px solid rgba(200,160,120,.3); }
+
+/* ── Text ── */
+.st-name {
+  font-family: 'LXGW WenKai Mono', monospace; font-size: 14px; font-weight: 500;
+  color: #4a3728;
+}
+body.dark .st-name { color: #e8d5c4; }
+
+.st-sub { font-size: 11px; color: #8b7355; margin-top: 3px; }
+body.dark .st-sub { color: #b8a088; }
+
+/* ── Empty ── */
+.st-empty {
+  grid-column: 1 / -1; padding: 24px; text-align: center;
+  font-size: 13px; color: #b8a088;
+}
+body.dark .st-empty { color: #8b6f5a; }
