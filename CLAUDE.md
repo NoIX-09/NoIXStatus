@@ -21,7 +21,7 @@ NoIXStatus/
 ├── src/
 │   ├── pages/[locale]/status.astro  # 唯一页面：系统状态
 │   ├── components/
-│   │   ├── Navbar.astro     # 顶栏：状态标题 + 语言/主题/特效切换
+│   │   ├── Navbar.astro     # 顶栏：品牌标识（siteName）+ 语言/主题/特效切换
 │   │   ├── Footer.astro     # 页脚
 │   │   ├── BackToTop.astro  # 回到顶部按钮
 │   │   ├── RainFX.astro     # Canvas 雨滴特效（fx-rain）
@@ -54,6 +54,7 @@ NoIXStatus/
 ### 样式规范
 
 - **暗色模式**：每个组件的 `<style>` 内定义 `body.dark` 覆盖样式，`global.css` 提供兜底
+- **移动端顶栏**：`.navbar` 在手机端加 `align-self: stretch` 铺满整宽（父容器 `.content` 为 `align-items: center`），操作区用 `margin-left: auto` 靠右
 - **服务卡片类名**（`st-card`、`st-dot`、`st-name`、`st-sub`、`st-empty`、`st-card-grid`、`st-col2`、`st-up/down/warn/error`）统一定义在 `global.css` 中（非 scoped），确保 JS 动态注入的 HTML 也能匹配
 
 ### i18n

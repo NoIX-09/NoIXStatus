@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { t, LOCALES, localeLabels, type Locale } from '../i18n/translations';
 
+const { siteName } = Astro.props;
 const locale = (Astro.currentLocale || 'zh-CN') as Locale;
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/status';
@@ -15,7 +16,7 @@ function localeUrl(loc: Locale) {
 <header class="navbar">
   <div class="navbar-brand">
     <span class="brand-icon"><Icon name="ph:activity-duotone" size="24" /></span>
-    <span>{t('statusPage.title', locale)}</span>
+    <span>{siteName}</span>
   </div>
   <div class="navbar-right">
     <div class="navbar-actions">
@@ -40,7 +41,6 @@ function localeUrl(loc: Locale) {
   .navbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
     padding: 0 32px;
     height: 52px;
@@ -71,6 +71,7 @@ function localeUrl(loc: Locale) {
     align-items: center;
     gap: 16px;
     flex-shrink: 0;
+    margin-left: auto;
   }
   .navbar-actions { display: flex; align-items: center; gap: 2px; }
   .navbar-actions .icon-btn {
@@ -123,15 +124,16 @@ function localeUrl(loc: Locale) {
   /* Mobile */
   @media (max-width: 600px) {
     .navbar {
+      align-self: stretch;
       padding: 0 12px;
       margin: 0;
       border-radius: 0;
       top: 0;
       height: 48px;
-      gap: 8px;
+      gap: 0;
     }
     .navbar-brand { font-size: 16px; gap: 8px; }
-    .navbar-right { gap: 6px; }
+    .navbar-right { gap: 6px; margin-left: auto; }
     .navbar-actions .icon-btn { width: 32px; height: 32px; }
     .icon-btn { width: 32px; height: 32px; }
     #locale-toggle { padding: 0 8px; font-size: 11px; }
